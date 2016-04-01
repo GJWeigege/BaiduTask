@@ -1,0 +1,528 @@
+html,body{
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    font-family: Microsoft YaHei, sans-serif;
+    font-size: 12px;
+    color: #787b83;
+}
+input,textarea,ul{
+    margin: 0;
+    padding: 0;
+}
+input[type="button"]{
+    cursor: pointer;
+}
+p{
+    margin: 0;
+}
+a{
+    text-decoration: none;
+    cursor: pointer;
+}
+h1,h2,h3,h4{
+    font-weight: normal;
+    margin: 0;
+}
+hr{
+    width: 30px;
+    border: 1px solid #fff;
+}
+#container{
+    width: 100%;
+    min-width: 1280px;
+}
+.mask{
+    width: 100%;
+    height: 100%;
+}
+
+/*导航栏*/
+#nav{
+    height: 60px;
+}
+#nav ul{
+    list-style: none;
+    float: right;
+    font-size: 14px;
+    margin: 0 20px;
+}
+#nav li{
+    float: left;
+}
+#nav ul a,#login{
+    display: inline-block;
+    padding: 20px 22px;
+}
+#nav ul a{
+    color: #787b83;
+}
+#nav ul a:hover{
+    border-bottom: #e74f4d solid 3px;
+}
+#nav a.active,#login{
+    color: #e74f4d;
+}
+#login{
+    float: right;
+    font-size: 14px;
+    margin-right: 67px;
+}
+.active{
+    border-bottom: #e74f4d solid 3px;
+}
+#login img {
+    vertical-align: bottom;
+    margin-right: 5px;
+}
+#logo{
+    font-family: SimHei, sans-serif;
+    font-size: 21px;
+    color: #393a3a;
+    margin-left: 60px;
+    margin-top: 13px;
+    display: inline-block;
+}
+#logo img{
+    margin-right: 5px;
+    vertical-align: bottom;
+}
+
+/*第一张大图*/
+#main{
+    height: 850px;
+    background: url("image/main.png") no-repeat top center;
+    background-size: cover;
+    position: relative;
+}
+#main-mask{
+    background-color: rgba(0,0,0,0.2);
+}
+#slogan{
+    width: 460px;
+    color: #fff;
+    position: absolute;
+    top: 230px;
+    left: 115px;
+}
+#slogan .big{
+    font-size: 60px;
+    margin: 0;
+}
+#slogan .small{
+    margin-top: 20px;
+    margin-bottom: 0;
+    font-size: 21px;
+}
+#slogan a{
+    color: #fff;
+    font-size: 30px;
+    background-color: #e74f4d;
+    display: inline-block;
+    padding: 14px 100px;
+    margin-top: 70px;
+    letter-spacing: 0.2em;
+    text-indent: 0.2em;
+}
+
+#intro{
+    height: 250px;
+    background-color: #fff;
+    font-family: SimHei, sans-serif;
+    font-size: 14px;
+    color: #767777;
+}
+.intro{
+    display: inline-block;
+    width: 25%;
+    text-align: center;
+}
+.intro img{
+    margin-top: 45px;
+}
+.intro p{
+    width: 11em;
+    height: 50px;
+    margin-top: 45px;
+    padding: 0 80px;
+    border-left: 2px #aaaaaa solid ;
+}
+.intro p:first-child{
+    border: none;
+}
+
+/*关于新世界，你不知道的还有什么？*/
+#question{
+    height: 360px;
+    background-color: #edecec;
+    text-align: center;
+}
+#question img{
+    margin-top: 90px;
+}
+#question h2{
+    color: rgba(50,51,51,0.5);
+    font-family: SimHei, sans-serif;
+    font-size: 54px;
+    margin-top: 48px;
+}
+
+/*地图*/
+#map{
+    height: 360px;
+    background-image: url("image/map.png");
+    background-size: cover;
+    text-align: center;
+    color: #fff;
+}
+#mapMask{
+    background-color: rgba(181,79,73,0.2);
+    padding-top: 50px;
+}
+#map h3{
+    font-size: 21px;
+}
+#map p.description{
+    font-size: 12px;
+    margin-top: 20px;
+}
+#map hr{
+    margin-top: 5px;
+}
+#map form{
+    margin-top: 50px;
+    font-size: 14px;
+    color: #a8aaaa;
+}
+#map select,#map input[type="button"]{
+    width: 236px;
+    height: 36px;
+    overflow: hidden;
+    border: none;
+    color: inherit;
+    margin-left: 28px;
+}
+#map select{
+    background: #fff url("image/slidedown.png") 208px center no-repeat;
+    -moz-appearance:none;
+    -webkit-appearance:none;
+}
+#map select:first-child{
+    margin-left: 0;
+}
+#map option{
+    height: 27px;
+    color: #323333;
+    background-color: #e3e3e4;
+}
+#map input[type="button"]{
+    color: #fff;
+    background-color: #be4e48;
+    text-align: center;
+    letter-spacing: 2em;
+    text-indent: 2em;
+}
+
+/*城市活动*/
+#activity{
+    height: 604px;
+    background-color: #f7f7f7;
+    text-align: center;
+    box-sizing: border-box;
+    padding-top: 100px;
+}
+#activity div{
+    display: inline-block;
+    width: 220px;
+    height: 390px;
+    box-sizing: border-box;
+    margin-left: 40px;
+}
+#activity div:first-child{
+    margin-left: 0;
+}
+#activity img{
+    border: #e1e1e1 1px solid;
+    background-color: #fff;
+    padding: 12px 10px;
+}
+#activity h3{
+    font-size: 16px;
+    color: #000;
+    margin: 10px 0;
+}
+/*上海*/
+#activity h3.sh{
+    font-size: 24px;
+    letter-spacing: 1em;
+    text-indent: 1em;
+    margin-top: 0;
+}
+
+/*新世界TIME*/
+#newWorld{
+    height: 566px;
+    position: relative;
+}
+#time,#text-description{
+    height: 100%;
+}
+#time{
+    color: #fff;
+    box-sizing: border-box;
+    width:  66.6666%;
+    background: #fff url("image/newworld.png") left top no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    text-align: center;
+}
+#time h1{
+    font-size: 158px;
+}
+#time h2{
+    font-size: 50px;
+    margin-top: 130px;
+    margin-bottom: -45px;
+}
+#time h3{
+    font-size: 22px;
+}
+#text-description{
+    width: 33.3333%;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 0 70px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+#text-description h3,#text-description p{
+    font-family: SimSun, sans-serif;
+}
+#text-description h3{
+    color: #000;
+    font-size: 22px;
+    margin-top: 155px;
+}
+#text-description span{
+    color: #e74f4d;
+}
+#text-description p{
+    line-height: 30px;
+    text-align: left;
+    margin-top: 30px;
+}
+#text-description a{
+    display: inline-block;
+    font-size: 14px;
+    color: #e25c60;
+    width: 105px;
+    box-sizing: border-box;
+    border: #e74f4d 1px solid;
+    padding: 10px 0;
+    margin: 50px 90px;
+}
+#text-description img{
+    margin-right: 14px;
+}
+#text-description img:last-child{
+    margin-right: 0 !important;
+}
+
+/*新时代关于爱生活的我们*/
+#new-time{
+    box-sizing: border-box;
+    height: 520px;
+    font-family: SimHei, sans-serif;
+    font-size: 21px;
+}
+.new-time-col{
+    display: inline-block;
+    width: 33.3333%;
+    height: 100%;
+    overflow: hidden;
+    text-align: center;
+}
+.new-time-col h3:first-child{
+    margin-top: 170px;
+}
+div.new-time-col:first-child{
+    color: #fff;
+    background-color: #e74f4d;
+}
+div.new-time-col:last-child{
+    background-image: url("image/women.png");
+}
+#new-time-mask{
+    background-color: rgba(0,0,0,0.4);
+}
+#new-time-col-center{
+    color: #323333;
+}
+#new-time-col-center hr{
+    border-color: #aaaaaa;
+}
+#new-time a{
+    display: inline-block;
+    box-sizing: border-box;
+    width: 170px;
+    height: 43px;
+    color: #fff;
+    border: 1px #fff solid;
+    padding: 10px 0;
+    margin-top: 25px;
+}
+#new-time-col-center a{
+    color: #e74f4d;
+    border: 1px #e74f4d solid;
+}
+
+/*join us*/
+#join{
+    height: 750px;
+    text-align: center;
+}
+#join>h3{
+    font-family: SimHei, sans-serif;
+    font-size: 21px;
+    color: #323333;
+    margin-top: 118px;
+}
+#join hr{
+    border-color: #e74f4d;
+}
+#join>p{
+    line-height: 18px;
+}
+#info{
+    margin-top: 107px;
+}
+#join ul{
+    text-align: left;
+    margin-left: 138px;
+    width: 300px;
+    list-style-type: none;
+    position: relative;
+}
+#join ul li{
+    margin: 40px 0;
+}
+#join ul li h4{
+    font-family: SimHei, sans-serif;
+    font-size: 14px;
+    color: #231815;
+    margin: 24px 0;
+}
+#join ul li p{
+    font-family: SimSun, sans-serif;
+    line-height: 21px;
+}
+#join ul li span{
+    display: block;
+    color: #231815;
+    position: absolute;
+    right: 0;
+}
+
+/*表单*/
+#join-form{
+    width: 640px;
+    text-align: left;
+    float: right;
+    margin-right: 140px;
+}
+#join-form input,#join-form textarea{
+    font-family: SimSun, sans-serif;
+    margin-top: 13px;
+    background-color: #edecee;
+    border: none;
+    text-indent: 1em;
+}
+#join-form input{
+    width: 310px;
+    height: 40px;
+}
+#join-form input:first-child,#join-form input:nth-child(2){
+    margin-top: 0;
+}
+#join-form input.join-form-top4:nth-child(2n){
+    margin-left: 20px;
+ }
+#join-form textarea{
+    width: 100%;
+    height: 120px;
+    font-size: 12px;
+    resize: none;
+    padding-top: 10px;
+}
+#join-form input[type="button"]{
+    font-family: SimHei, sans-serif;
+    width: 100%;
+    color: #323333;
+    font-size: 14px;
+    text-indent: 0;
+}
+/*联系我们*/
+#contact-us{
+    height: 360px;
+    background-color: #32353e;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+}
+#contact-us h3{
+    font-family: SimHei, sans-serif;
+    font-size: 21px;
+    margin-top: 90px;
+}
+#contact-us p{
+    font-family: SimSun, sans-serif;
+    line-height: 18px;
+    margin-top: 12px;
+}
+#contact-email{
+    margin-top: 30px;
+}
+#contact-email input{
+    border: none;
+    height: 40px;
+    /*解决input不对齐*/
+    vertical-align: top;
+    /*或者*/
+    /*float: left;*/
+}
+#contact-email input[type="email"]{
+    background-color: #fff;
+    width: 430px;
+    text-indent: 1em;
+}
+#contact-email input[type="button"]{
+    font-family: Microsoft YaHei, sans-serif;
+    background-color: #6f7278;
+    width: 80px;
+    font-size: 15px;
+    color: #fff;
+    letter-spacing: 0.5em;
+    text-indent: 0.5em;
+}
+#contact-us a img{
+    margin: 37px 20px;
+}
+
+/*footer*/
+#footer{
+    height: 60px;
+    background-color: #2f2f38;
+    color: #fff;
+}
+#footer span{
+    display: inline-block;
+    margin-left: 100px;
+    margin-top: 30px;
+}
+#footer a{
+    color: #fff;
+    float: right;
+    margin-top: 30px;
+    margin-right: 40px;
+}

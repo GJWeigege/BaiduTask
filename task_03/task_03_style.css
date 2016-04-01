@@ -1,0 +1,56 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+div {
+    border: 1px #999 solid;
+    background: white;
+    padding: 20px;
+}
+
+#container {
+    width: 70%;
+    border: none;
+    background: #eee;
+    margin:0 auto;
+}
+
+#nameAndLogo {
+    width: 200px;
+    position: relative;
+    float: left;
+}
+
+#content {
+    margin-left: 262px;
+    margin-right: 142px;
+}
+#content p{
+    text-indent: 2em;
+}
+
+#member {
+    width: 80px;
+    float: right;
+}
+#member img{
+    width: 80px;
+}
+
+#modify{
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    clear: both;
+}
+
+#teamName{
+    display: inline-block;
+    position: absolute;
+    margin-left: 20px;
+    top: 20px;
+}

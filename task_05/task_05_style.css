@@ -1,0 +1,159 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: RGB(220,220,220);
+}
+
+h2{
+    font-size: 120%;
+}
+
+h3,span{
+    color: dimgray;
+}
+
+h3{
+    font-size: 110%;
+}
+
+span{
+    font-size: 80%;
+}
+
+#content p{
+    text-indent: 2em;
+}
+
+#wrapper{
+    width: 100%;
+}
+/*导航栏*/
+#nav{
+    background: RGB(51,51,51) url(logo.png) 20px no-repeat;
+    background-size: auto 60px;
+    height: 60px;
+}
+#nav ul{
+    float: right;
+    margin-right: 20px;
+}
+#nav #navBar li{
+    float: left;
+    list-style-type: disc;
+    margin-left: 20px;
+}
+#nav li a{
+    color: white;
+    font-size: 90%;
+    text-decoration: none;
+}
+
+/*内容区域*/
+#content{
+    margin-right: 430px;
+}
+#content li{
+    list-style-type: none;
+}
+#content div{
+    /*疑问*/
+    margin: 20px 0 20px 20px;
+    padding: 20px;
+    background: white;
+    box-shadow: dimgray 1px 1px 1px;
+}
+#content #image p{
+    text-indent: 0;
+}
+
+/*image*/
+#image div{
+    width: 20%;
+    border: 1px gray solid;
+    padding: 10px;
+    text-align: center;
+    box-shadow: none;
+}
+#image img{
+    width: 100%;
+}
+#image p{
+    margin: auto 0;
+}
+
+/*表格*/
+table{
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+td{
+    font-size: 90%;
+    border: 1px silver solid;
+}
+th{
+     border: 1px silver solid;
+     background: black;
+     color: white;
+ }
+#sum td{
+    border: 1px silver solid;
+    background: silver;
+    font-weight: bold;
+}
+
+/*侧栏*/
+#sidebar{
+    width: 350px;
+    float: right;
+    background: white;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: dimgray 1px 1px 1px;
+}
+#sidebar h2{
+    border-left: 3px gray solid;
+    padding: 5px 10px;
+}
+
+/*表单*/
+.labelLeft{
+    width: 125px;
+    float: left;
+    text-align: right;
+    margin-right: 15px;
+    clear: left;
+}
+#submitButton{
+    width: 100%;
+}
+#sidebar p{
+    font-size: 90%;
+    text-indent: 0;
+}
+#submitButton{
+    height: 40px;
+    background: cornflowerblue;
+    color: white;
+    font-weight: bold;
+    font-size: 110%;
+    border: none;
+    border-radius: 5px;
+}
+textarea{
+    resize: none;
+}
+.prompt{
+    margin-left: 140px;
+    color: gray;
+}
+
+/*Copyright*/
+#copyright{
+    clear: both;
+    background: black;
+    color: white;
+    text-align: center;
+    padding-top: 15px;
+    height: 70px;
+}
