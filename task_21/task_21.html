@@ -1,0 +1,41 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>百度前端任务二十一</title>
+    <style type="text/css">
+    p{
+      display: inline-block;
+      height: 33px;
+      margin: 6px;
+      padding: 3px;
+      line-height: 33px;
+      text-align: center;
+      color: white;
+      font-size: 20px;
+      font-weight: bolder;
+    }
+    #tagQueue p{
+      background-color: rgb(140,200,250);
+      min-width: 40px;
+    }
+    #tagQueue p:hover{
+      background-color: rgb(255,0,0);
+    }
+    #queue p{
+      background-color: rgb(253,200,124);
+      min-width: 50px;
+    }
+    </style>
+  </head>
+<body>
+  <label>Tag<input type="text" id="input"></label><br>
+  <div id="tagQueue"></div>
+  <br>
+  <textarea id="text" rows="5" cols="30"></textarea>
+  <br>
+  <button id="insert">确认兴趣爱好</button>
+  <br>
+  <div id="queue"></div>
+    <script src="task_21.js"></script>
+</html>
