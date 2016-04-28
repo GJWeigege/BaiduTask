@@ -1,0 +1,79 @@
+#tb-rank tr:nth-child(odd){
+	background-color: #cccccc;
+}
+#tb-rank th{
+	background-color: black;
+	color:white;
+	text-align: left;
+}
+#tb-rank tr:nth-child(2), 
+#tb-rank tr:nth-child(3), 
+#tb-rank tr:nth-child(4){
+	color: red;
+}
+#tb-rank + input{
+	margin-top: 50px;
+	margin-bottom: 50px;
+	height: 20px;
+	width: 150px;
+	transition: 0.3s width;
+}
+#tb-rank + input:focus{
+	width: 200px;
+	height: 20px;
+	border: 1px solid blue;
+	transition: 0.3s width;
+}
+#container{
+	border: 1px solid red;
+	width: 300px;
+	height: 150px;
+	position: relative;
+	overflow: hidden;
+}
+#slide{
+	width: 900px;
+	padding:0;
+	margin: 0;
+}
+#slide li{
+	width: 300px;
+	height: 150px;
+	position: relative;
+	float: left;
+	left:0;
+	list-style: none;
+}
+#slide1{
+	background-color: red;
+}
+#slide2{
+	background-color: blue;
+}
+#slide3{
+	background-color: green;
+}
+#labelTxt{
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+#labelTxt a{
+	display: inline-block;
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	text-decoration: none;
+	line-height: 30px;
+	background-color: grey;
+	z-index: 999;
+}
+#slide1:target~ #slide{
+	left: 0;
+}
+#slide2:target~ #slide{
+	left: -100%;
+}
+#slide1:target~ #slide{
+	left: -200%;
+}
