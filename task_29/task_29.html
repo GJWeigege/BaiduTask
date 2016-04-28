@@ -1,0 +1,52 @@
+<!DOCTYPE>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>百度前端任务二十九</title>
+	<style type="text/css">
+	*{
+		font-family: "黑体";
+	}
+	input{
+		width: 300px;
+		height: 40px;
+		border-radius: 3px;
+		border: solid 1px gray;
+		padding-left: 10px;
+	}
+	button{
+		width: 60px;
+		height: 40px;
+		background-color: blue;
+		color: white;
+		border-radius: 3px;
+		border: solid 1px gray;
+		margin: 10px;
+	}
+	span{
+		position: relative;
+		left: 40px;
+		color: rgb(168,168,168);
+	}
+	input.error{
+		border: solid 1px red;
+	}
+	span.error{
+		color: red;
+	}
+	input.right{
+		border: solid 1px rgb(94,183,64);
+	}
+	span.right{
+		color: rgb(94,183,64);
+	}
+	</style>
+</head>
+<body>
+	<label>名称
+	<input type="text" id="text"><button id="btn">验证</button>
+	</label><br>
+	<span id="tip">必填，长度为4~16个字符</span>
+	<script type="text/javascript" src="task_29.js"></script>
+</body>
+</html>
