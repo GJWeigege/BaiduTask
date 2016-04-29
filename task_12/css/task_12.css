@@ -65,7 +65,7 @@
 	text-align: center;
 	text-decoration: none;
 	line-height: 30px;
-	background-color: grey;
+	background-color: gray;
 	z-index: 999;
 }
 #slide1:target~ #slide{
