@@ -1,0 +1,80 @@
+<!DOCTYPE>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>百度前端任务三十一</title>
+	<style type="text/css">
+	section{
+		font-family: "微软雅黑";
+		width: 50%;
+		height: 400px;
+		margin-top: 100px;
+		margin-left: auto;
+		margin-right: auto;
+		font-size: 20px;
+	}
+	#divRadio{
+		width: 400px;
+		margin-right: auto;
+		margin-left: auto;
+	}
+	#divRadio label{
+		margin: 40px;
+	}
+	#divSelect{
+		width: 600px;
+		margin-right: auto;
+		margin-left: auto;
+	}
+	#divSelect select{
+		width: 250px;
+		margin: 10px;
+		height: 30px;
+		border-radius: 3px;
+		font-size: 18px;
+		font-family: "微软雅黑";
+	}
+	select option{
+		font-size: 18px;
+		font-family: "微软雅黑";
+	}
+	#divSelect input{
+		width: 400px;
+		height: 30px;
+		margin: 20px;
+		border: solid 1px;
+		border-radius: 3px;
+	}
+	#company{
+		display: none;
+	}
+	</style>
+</head>
+<body>
+	<section>
+		<div id="divRadio">
+			<label><input type="radio" name="isStudent" value="student" checked>在校生</label>
+			<label><input type="radio" name="isStudent" value="nostudent">非在校生</label>
+		</div>
+		<div id="divSelect">
+			<div id="school">
+				学校<select id="city">
+					<option>大连</option>
+					<option>北京</option>
+					<option>厦门</option>
+					<option>上海</option>
+				</select>
+				<select id="collage">
+					<option>大连理工大学</option>
+					<option>大连海事大学</option>
+					<option>东北财经大学</option>
+					<option>大连舰艇学院</option>
+					<option>大连海洋大学</option>
+				</select>
+			</div>
+			<div id="company">单位<input type="text"></div>
+		</div>
+	</section>
+	<script type="text/javascript" src="task_31.js"></script>
+</body>
+</html>
