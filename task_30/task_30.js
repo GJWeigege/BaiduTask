@@ -45,7 +45,7 @@ function addChild(target){
 			break;
 		}
 		case "text-mail":{
-			text = document.createTextNode("必填，长度为4~16个字母或数字");
+			text = document.createTextNode("必填，必须为常见邮箱格式");
 			break;
 		}
 		case "text-tel":{
