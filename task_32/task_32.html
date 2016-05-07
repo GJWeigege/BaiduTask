@@ -11,14 +11,26 @@
 			<div id="myForm"></div>
 			<div id="addForm">
 				<div id="checkType">
-					<label id="label1"><input type="radio" name="type" checked>文本框</label>
-					<label id="label2"><input type="radio" name="type">单选框</label>
-					<label id="label3"><input type="radio" name="type">复选框</label>
-					<label id="label4"><input type="radio" name="type">下拉框</label>
-					<label id="label5"><input type="radio" name="type">文本域</label>
+					<label id="typeLabel1"><input type="radio" name="type" checked>文本框</label>
+					<label id="typeLabel2"><input type="radio" name="type">单选框</label>
+					<label id="typeLabel3"><input type="radio" name="type">复选框</label>
+					<label id="typeLabel4"><input type="radio" name="type">下拉框</label>
+					<label id="typeLabel5"><input type="radio" name="type">文本域</label>
 				</div>
 				<div id="addOther">
-					<div></div>
+					<div id="otherType">
+						<label id="otherName">名称：<input type="text"></label>
+						<label id="otherRadio1"><input type="radio" name="radio" value="require" checked>必填</label>
+						<label id="otherRadio2"><input type="radio" name="radio" value="noreguire">选填</label>
+					</div>
+					<div id="rules"><span>数据类型：</span>
+						<label><input type="radio" name="rules" value="text" checked>文本</label>
+						<label><input type="radio" name="rules" value="num">数字</label>
+						<label><input type="radio" name="rules" value="tel">手机</label>
+						<label><input type="radio" name="rules" value="mail">邮箱</label>
+						<label><input type="radio" name="rules" value="psw">密码</label>
+					</div>
+					<div id="long"></div>
 				</div>
 				<div id="add">+添加表单</div>
 			</div>
