@@ -8,29 +8,36 @@
 	<nav><div id="manager"><div>?</div>问卷管理</div><div>我的问卷</div></nav>
 	<section>
 		<div id="container">
-			<div id="myForm"></div>
+			<div id="myForm">
+				<form id="formInit" name="formInit">
+				</form>
+			</div>
 			<div id="addForm">
 				<div id="checkType">
-					<label id="typeLabel1"><input type="radio" name="type" checked>文本框</label>
-					<label id="typeLabel2"><input type="radio" name="type">单选框</label>
-					<label id="typeLabel3"><input type="radio" name="type">复选框</label>
-					<label id="typeLabel4"><input type="radio" name="type">下拉框</label>
-					<label id="typeLabel5"><input type="radio" name="type">文本域</label>
+					<form name="frmType">
+						<label id="typeLabel1"><input type="radio" name="type" checked value="text">文本框</label>
+						<label id="typeLabel2"><input type="radio" name="type" value="radio">单选框</label>
+						<label id="typeLabel3"><input type="radio" name="type" value="check">复选框</label>
+						<label id="typeLabel4"><input type="radio" name="type" value="select">下拉框</label>
+						<label id="typeLabel5"><input type="radio" name="type" value="textarea">文本域</label>
+					</form>
 				</div>
-				<div id="addOther">
-					<div id="otherType">
-						<label id="otherName">名称：<input type="text"></label>
-						<label id="otherRadio1"><input type="radio" name="radio" value="require" checked>必填</label>
-						<label id="otherRadio2"><input type="radio" name="radio" value="noreguire">选填</label>
-					</div>
-					<div id="rules"><span>数据类型：</span>
-						<label><input type="radio" name="rules" value="text" checked>文本</label>
-						<label><input type="radio" name="rules" value="num">数字</label>
-						<label><input type="radio" name="rules" value="tel">手机</label>
-						<label><input type="radio" name="rules" value="mail">邮箱</label>
-						<label><input type="radio" name="rules" value="psw">密码</label>
-					</div>
-					<div id="long"></div>
+				<div id="addOther" >
+					<form id="frmAdd" name="frmAdd">
+						<div id="otherType">
+							<label id="otherName">名称：<input type="text" name="textName"></label>
+							<label id="otherRadio1"><input type="radio" name="isRequire" value="require" checked>必填</label>
+							<label id="otherRadio2"><input type="radio" name="isRequire" value="noreguire">选填</label>
+						</div>
+						<div id="rules">数据类型：
+							<label><input type="radio" name="rules" value="txt" checked>文本</label>
+							<label><input type="radio" name="rules" value="num">数字</label>
+							<label><input type="radio" name="rules" value="tel">手机</label>
+							<label><input type="radio" name="rules" value="mail">邮箱</label>
+							<label><input type="radio" name="rules" value="psw">密码</label>
+						</div>
+						<div id="long">字符长度：<input id='minlen' type='number' name='minlen' min="0" value="4"> — <input id='maxlen' type='number' name='maxlen' min="1" value="16"></div>
+					</form>
 				</div>
 				<div id="add">+添加表单</div>
 			</div>
