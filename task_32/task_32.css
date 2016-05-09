@@ -51,9 +51,41 @@ section>div{
 	border-bottom: solid 2px rgb(190,190,190);
 	margin-bottom: 10px;
 }
-#addForm{
+#addForm,#myForm{
 	width: 100%;
 	border: solid 1px rgb(190,190,190);
+}
+#myForm{
+	margin: 15px 0;
+}
+#showForm{
+	font-size: 30px;
+	padding: 10px;
+	text-align: center;
+}
+#formInit{
+	width: 80%;
+	margin-right: auto;
+	margin-left: auto;
+}
+#formInit label{
+
+	display: inline-block;
+	text-align: center;
+	margin: 10px;
+}
+#formInit span{
+	text-align: right;
+	width: 250px;
+	padding-right: 20px;
+	display: inline-block;
+}
+#formInit input{
+	width: 330px;
+	height: 40px;
+	border-radius: 3px;
+	border: solid 1px gray;
+	padding-left: 10px;
 }
 #checkType{
 	width: 70%;
@@ -104,7 +136,9 @@ section>div{
 	margin-left: auto;
 	margin-right: auto;
 }
-p{
+#tagQueue p{
+	background-color: rgb(140,200,250);
+	min-width: 40px;
 	display: inline-block;
 	height: 33px;
 	margin: 6px;
@@ -114,10 +148,6 @@ p{
 	color: white;
 	font-size: 20px;
 	font-weight: bolder;
-}
-#tagQueue p{
-	background-color: rgb(140,200,250);
-	min-width: 40px;
 }
 #tagQueue p:hover{
 	background-color: rgb(255,0,0);
