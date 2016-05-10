@@ -20,12 +20,54 @@
 			var inner = doc.forms["formInit"].innerHTML;
 			switch(this.inputType){
 				case "text":{
-					doc.forms["formInit"].innerHTML += "<label><span>"+this.label+"：</span><input type='"+this.inputType+"' id=''></label>";
+					inner += "<label><span>"+this.label+"：</span><input type='"+this.rulesType+"' id='"+this.id+"'></label>";
+					break;
+				}
+				case "radio":{
+					inner += "<label><span>"+this.label+"：</span>";
+					for (var i = data.item.length - 1; i >= 0; i--) {
+						inner += "<label><input type='"+this.inputType+"' name='"+this.id+"' id='"+this.id+"'>"+data.item[i]+"</label>";
+					};
+					inner += "</label>";
+					break;
+				}
+				case "checkbox":{
+					inner += "<label><span>"+this.label+"：</span>";
+					for (var i = data.item.length - 1; i >= 0; i--) {
+						inner += "<label><input type='"+this.inputType+"' name='"+this.id+"' id='"+this.id+"'>"+data.item[i]+"</label>";
+					};
+					inner += "</label>";
+					break;
+				}
+				case "select":{
+					inner += "<label><span>"+this.label+"：</span><select id='"+this.id+"'>";
+					for (var i = data.item.length - 1; i >= 0; i--) {
+						inner += "<option>"+data.item[i]+"</option>";
+					};
+					inner += "</select></label>";
+					break;
+				}
+				case "textarea":{
+					inner += "<label><span>"+this.label+"：</span><textarea id='"+this.id+"' placeholder='请输入您要输入的内容~'></textarea></label>";
 					break;
 				}
 			}
+			console.log(inner);
+			doc.forms["formInit"].innerHTML = inner;
 		},
-		validator: function(){}
+		// validator: function(){
+		// 	var id= this.id,elem = doc.getElementById("0");
+		// 	console.log(elem);
+		// 	addHandler(elem,"click",function(){
+		// 		console.log(elem);
+		// 	});
+		// },
+		// isempty: function(type,id){
+		// 	var val = doc.getElementById(id).value;
+		// 	// switch
+		// },
+		// iserror: function(id){},
+		// isRequire: function(id){}
 	};
 	var data = {
         label: '',              //标签名字
@@ -38,11 +80,11 @@
         item: [],               //radio的选项
         id: 0,                  //表单的id，初始值为0
     },dataQueue=[];
-	data.prototype = {
-		validator: function(){
-			// if (this.) {};
-		}
-	};
+	// data.prototype = {
+	// 	validator: function(){
+	// 		// if (this.) {};
+	// 	}
+	// };
 	function addHandler(element,type,handler){
 		//创建事件监听函数
 		if (window.addEventListener) {
@@ -171,7 +213,7 @@
 			}
 			case "typeLabel3":{
 				data.label = "input";
-				data.type = "check";
+				data.type = "checkbox";
 				showOther(id);
 				break;
 			}
@@ -195,8 +237,10 @@
 	addOther = doc.getElementById("addOther"),
 	add = doc.getElementById("add");
 	addHandler(myForm,"click",function(event){
-		var e = event || window.event,
-		target = event.target || event.srcElement;
+		// var e = event || window.event,
+		// target = event.target || event.srcElement;
+
+		// addHandler()
 	});
 	addHandler(checkType,"click",function(event){
 		var e = event || window.event,
@@ -213,14 +257,221 @@
 		// var e = event || window.event,
 		// target = event.target || event.srcElement;
 		// dataQueue.push(data);
-		addForm();
-		dataQueue.push(new Data(data));
-		doc.getElementById("formInit").innerHTML = "";
-		for (var i = 0; i < dataQueue.length; i++) {
-			dataQueue[i].init();
-		};
+		if(addForm()){
+			dataQueue.push(new Data(data));
+			doc.getElementById("formInit").innerHTML = "";
+			for (var i = 0; i < dataQueue.length; i++) {
+				dataQueue[i].init();
+			};
+			doc.getElementById("formInit").innerHTML += "<br><button id='btn'>提交</button>";
+		}
+		var inputs = myForm.getElementsByTagName("input"),
+		textareas = myForm.getElementsByTagName("textarea");
+		for(var i=0;i<inputs.length;i++){
+			console.log(inputs[i]);
+			addHandler(inputs[i],"focus",function(event){
+				var e = event || window.event;
+				var target = e.target || e.srcElement;
+				addtip(target);
+			});
+			addHandler(inputs[i],"blur",function(event){
+				var e =event || window.event;
+				var target = e.target || e.srcElement;
+				checkWarm(target);
+			});
+		}
+		for(var i=0;i<textareas.length;i++){
+			addHandler(textareas[i],"focus",function(event){
+				var e = event || window.event;
+				var target = e.target || e.srcElement;
+				addtip(target);
+			});
+			addHandler(textareas[i],"blur",function(event){
+				var e =event || window.event;
+				var target = e.target || e.srcElement;
+				checkWarm(target);
+			});
+		}
 		console.log(dataQueue);
 	});
+	function addtip(target){
+		var p = target.parentNode.getElementsByTagName("p");
+		var text = null,textMessage="",id=target.id,data = dataQueue[id];
+		console.log(data);
+		if(p[0]!==undefined){
+			p[0].parentNode.removeChild(p[0]);
+		}
+		var pTip = document.createElement("p");
+		switch(data.type){
+			case "input":{
+				switch(data.rulesType){
+					case "text":{
+						if(data.isRequire){
+							textMessage = "必填，长度为"+data.minlen+"~"+data.maxlen+"个字符";
+						}
+						else{
+							textMessage = "选填，长度为"+data.minlen+"~"+data.maxlen+"个字符";
+						}
+						break;
+					}
+					case "password":{
+						if(data.isRequire){
+							textMessage = "必填，长度为"+data.minlen+"~"+data.maxlen+"个字符";
+						}
+						else{
+							textMessage = "选填，长度为"+data.minlen+"~"+data.maxlen+"个字符";
+						}
+						break;
+					}
+					case "email":{
+						if(data.isRequire){
+							textMessage = "必填，必须为常见邮箱格式";
+						}
+						else{
+							textMessage = "选填，必须为常见邮箱格式";
+						}
+						break;
+					}
+					case "telphone":{
+						if(data.isRequire){
+							textMessage = "必填，为11位数字";
+						}
+						else{
+							textMessage = "选填，为11位数字";
+						}
+						break;
+					}
+					case "number":{
+						if(data.isRequire){
+							textMessage = "必填，长度为"+data.minlen+"~"+data.maxlen+"个数字";
+						}
+						else{
+							textMessage = "选填，长度为"+data.minlen+"~"+data.maxlen+"个数字";
+						}
+						break;
+					}
+				}
+				break;
+			}
+			case "textarea":{
+				if(data.isRequire){
+					textMessage = "必填，长度为"+data.minlen+"~"+data.maxlen+"个数字";
+				}
+				else{
+					textMessage = "选填，长度为"+data.minlen+"~"+data.maxlen+"个数字";
+				}
+				break;
+			}
+		}
+			
+		text = document.createTextNode(textMessage);
+		pTip.appendChild(text);
+		target.parentNode.appendChild(pTip);
+	}
+	function checkWarm(target){
+		var p = target.parentNode.parentNode.getElementsByTagName("p");
+		// console.log(span[0]!==undefined);
+		var text = null;
+		if(p[0]!==undefined){
+			p[0].parentNode.removeChild(p[0]);
+		}
+		span = document.createElement("span");
+		switch(target.id){
+			case "text-name":{
+				if(target.value==""){
+					text = document.createTextNode("姓名不能为空");
+					target.className = "error";
+					span.className = "error";
+				}
+				else if(checkName(target.value)) {
+					text = document.createTextNode("名字格式正确");
+					target.className = "right";
+					span.className = "right";
+				}
+				else{
+					text = document.createTextNode("名字格式不正确");
+					target.className = "error";
+					span.className = "error";
+				}
+				break;
+			}
+			case "password":{
+				if(target.value==""){
+					text = document.createTextNode("密码不能为空");
+					target.className = "error";
+					span.className = "error";
+				}
+				else if(/^[0-9a-zA-Z]{4,16}$/.test(target.value)) {
+					text = document.createTextNode("密码可用");
+					target.className = "right";
+					span.className = "right";
+				}
+				else{
+					text = document.createTextNode("密码格式不正确");
+					target.className = "error";
+					span.className = "error";
+				}
+				break;
+			}
+			case "passwordCheck":{
+				var psw = document.getElementById("password").value;
+				if(target.value==""){
+					text = document.createTextNode("验证密码不能为空");
+					target.className = "error";
+					span.className = "error";
+				}
+				else if(target.value===psw) {
+					text = document.createTextNode("密码输入一致");
+					target.className = "right";
+					span.className = "right";
+				}
+				else{
+					text = document.createTextNode("密码输入不一致");
+					target.className = "error";
+					span.className = "error";
+				}
+				break;
+			}
+			case "text-mail":{
+				if(target.value==""){
+					text = document.createTextNode("邮箱不能为空");
+					target.className = "error";
+					span.className = "error";
+				}
+				else if(/^[\w\.\-]+@([a-zA-Z0-9\-]+\.)+[a-zA-Z0-9\-]{2,4}$/.test(target.value)) {
+					text = document.createTextNode("邮箱格式正确");
+					target.className = "right";
+					span.className = "right";
+				}
+				else{
+					text = document.createTextNode("邮箱格式不正确");
+					target.className = "error";
+					span.className = "error";
+				}
+				break;
+			}
+			case "text-tel":{
+				if(target.value==""){
+					text = document.createTextNode("手机不能为空");
+					target.className = "error";
+					span.className = "error";
+				}
+				else if(/^[0-9]{11}$/.test(target.value)) {
+					text = document.createTextNode("手机格式正确");
+					target.className = "right";
+					span.className = "right";
+				}
+				else{
+					text = document.createTextNode("手机格式不正确");
+					target.className = "error";
+					span.className = "error";
+				}
+				break;
+			}
+		}
+		// span.appendChild(text);
+		// target.parentNode.parentNode.appendChild(span);
+	}
 	function addForm(){
 		var form = doc.forms["frmAdd"],
 		textName = form["textName"],
@@ -251,26 +502,29 @@
 						if(rules!=undefined){
 							for (var i = rules.length - 1; i >= 0; i--) {
 								var rulesVal = rules[i];
-								switch(rulesVal.value){
-									case "txt":{
-										data.rulesType = "txt";
-										break;
-									}
-									case "num":{
-										data.rulesType = "num";
-										break;
-									}
-									case "tel":{
-										data.rulesType = "tel";
-										break;
-									}
-									case "mail":{
-										data.rulesType = "mail";
-										break;
-									}
-									case "psw":{
-										data.rulesType = "psw";
-										break;
+								console.log();
+								if(rulesVal.checked){
+									switch(rulesVal.value){
+										case "txt":{
+											data.rulesType = "text";
+											break;
+										}
+										case "num":{
+											data.rulesType = "number";
+											break;
+										}
+										case "tel":{
+											data.rulesType = "telphone";
+											break;
+										}
+										case "mail":{
+											data.rulesType = "email";
+											break;
+										}
+										case "psw":{
+											data.rulesType = "password";
+											break;
+										}
 									}
 								}
 							};
@@ -304,11 +558,11 @@
 						data.id=data.id++;
 						break;
 					}
-					case "check":{
+					case "checkbox":{
 						var tagQueueVal = doc.getElementById("tagQueue").childNodes;
 						data.type = "input";
 						data.item = [];
-						data.inputType = "check";
+						data.inputType = "checkbox";
 						if(tagQueueVal.length == 0){
 							alert("选项内容尚未添加！");
 							return false;
@@ -347,8 +601,8 @@
 							return false;
 						}
 						else{
-							data.minlen = minlen;
-							data.maxlen = maxlen;
+							data.minlen = parseInt(minlen.value);
+							data.maxlen = parseInt(maxlen.value);
 						}
 						data.id=data.id++;
 						break;
@@ -356,7 +610,7 @@
 				}
 			}
 		};
-		
+		return true;
 		console.log(data);
 	}
 }());
