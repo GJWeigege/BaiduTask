@@ -1,4 +1,16 @@
 (function(){
+	var data = {
+        label: '',              //标签名字
+        type: '',               //表单类型
+        isRequire: true,        //是否必需
+        inputType: '',         	//input表单的种类
+        rulesType: '',			//规则的类型
+        minlen: 0,          	//text之类文本的最小长度限制
+        maxlen: 1,          	//text之类文本的最大长度限制
+        item: [],               //radio的选项
+        id: 0,                  //表单的id，初始值为0
+        success: false
+    },dataQueue=[];
 	function Data(data){
 		this.label = data.label;
 		this.type = data.type;
@@ -18,61 +30,57 @@
 	}
 	Data.prototype = {
 		init: function(){
+			//渲染表单对象函数
 			var inner = doc.forms["formInit"].innerHTML;
-			switch(this.inputType){
+			switch(this.inputType){//判断表单对象的inputType的值
 				case "text":{
+					//若为text类型，则渲染文本框
 					inner += "<label><span>"+this.label+"：</span><input type='"+this.rulesType+"' id='"+this.id+"'></label>";
 					break;
 				}
 				case "radio":{
+					//若为radio，则渲染单选框
 					inner += "<label><span>"+this.label+"：</span>";
 					for (var i = data.item.length - 1; i >= 0; i--) {
+						//输出单选框的选项
 						inner += "<label><input type='"+this.inputType+"' value='"+data.item[i]+"' name='"+this.label+"' id='"+this.id+"'>"+data.item[i]+"</label>";
 					};
 					inner += "</label>";
 					break;
 				}
 				case "checkbox":{
+					//若为checkbox，则渲染复选框
 					inner += "<label><span>"+this.label+"：</span>";
 					for (var i = data.item.length - 1; i >= 0; i--) {
+						//输出复选框的选项
 						inner += "<label><input type='"+this.inputType+"' value='"+data.item[i]+"' name='"+this.label+"' id='"+this.id+"'>"+data.item[i]+"</label>";
 					};
 					inner += "</label>";
 					break;
 				}
 				case "select":{
+					//若为select，则渲染下拉框
 					inner += "<label><span>"+this.label+"：</span><select id='"+this.id+"'>";
 					for (var i = data.item.length - 1; i >= 0; i--) {
+						//输出下拉框选项
 						inner += "<option value='"+data.item[i]+"'>"+data.item[i]+"</option>";
 					};
 					inner += "</select></label>";
 					break;
 				}
 				case "textarea":{
+					//若为textarea，则渲染文本域
 					inner += "<label><span>"+this.label+"：</span><textarea id='"+this.id+"' placeholder='请输入您要输入的内容~'></textarea></label>";
 					break;
 				}
 			}
-			doc.forms["formInit"].innerHTML = inner;
+			doc.forms["formInit"].innerHTML = inner;				//最终渲染表单区域
 		}
 	};
-	var data = {
-        label: '',              //标签名字
-        type: '',               //表单类型
-        isRequire: true,        //是否必需
-        inputType: '',         	//input表单的种类
-        rulesType: '',			//规则的类型
-        minlen: 0,          	//text之类文本的最小长度限制
-        maxlen: 1,          	//text之类文本的最大长度限制
-        item: [],               //radio的选项
-        id: 0,                  //表单的id，初始值为0
-        success: false
-    },dataQueue=[];
-	// data.prototype = {
-	// 	validator: function(){
-	// 		// if (this.) {};
-	// 	}
-	// };
+	var doc = document,												//获取document元素
+	formInit = doc.getElementById("formInit"),						//获取表单渲染区域
+	checkType = doc.getElementById("checkType"),					//获取表单类型选择区域
+	add = doc.getElementById("add");								//获取表单添加按钮
 	function addHandler(element,type,handler){
 		//创建事件监听函数
 		if (window.addEventListener) {
@@ -85,6 +93,109 @@
 			element["on"+type] = handler;
 		}
 	};
+	addHandler(formInit,"click",function(event){
+		//监听表单渲染区域点击事件
+		var e = event || window.event,
+		target = event.target || event.srcElement;
+		if(target.tagName.toLowerCase() == "button"){					//判断点击目标是不是按钮
+			event.preventDefault();										//阻止表单提交
+			for (var i = dataQueue.length - 1; i >= 0; i--) {
+				//判断表单数组里的success值是否全部为true
+				if(dataQueue[i].success == false){
+					alert("有数据未填写或格式错误，提交失败！");
+					return false;
+				}
+			};
+			alert("提交成功！");										//全部为true则弹出提交成功窗口
+		}
+		else if(target.tagName.toLowerCase() == "select"){				//判断点击目标是否为下拉框
+			var id = target.id-1;										//获取点击目标的id对应数组的下标
+			dataQueue[id].success = true;								//若点击了下拉框则默认已经选择了数据，将success设置为true
+		}
+	});
+	addHandler(checkType,"click",function(event){
+		//监听表单类型选择区域的点击事件
+		var e = event || window.event,
+		target = event.target || event.srcElement;
+		if(target.tagName.toLowerCase() == "label" || target.parentNode.tagName.toLowerCase() == "label"){
+			//若点击目标是label或者label的子元素调用checkedType函数
+			checkedType(target.id || target.parentNode.id);				//传递目标的id或父元素的id（即label的id）
+		}
+	});
+	addHandler(add,"click",function(){
+		//监听添加表单按钮的点击事件
+		if(addForm()){													//调用addForm函数
+			dataQueue.push(new Data(data));								//创建新Data对象，并加入数组
+			doc.getElementById("formInit").innerHTML = "";				//对表单区域进行清空
+			for (var i = 0; i < dataQueue.length; i++) {
+				dataQueue[i].init();									//依次渲染表单对象
+			};
+			doc.getElementById("formInit").innerHTML += "<br><button id='btn'>提交</button>";//最终渲染提交按钮
+		}
+		var inputs = myForm.getElementsByTagName("input"),				//获取表单的input元素
+		textareas = myForm.getElementsByTagName("textarea");			//获取表单的textarea元素
+		for(var i=0;i<inputs.length;i++){
+			addHandler(inputs[i],"focus",function(event){
+				//监听input表单的获得焦点事件
+				var e = event || window.event;
+				var target = e.target || e.srcElement;
+				addtip(target);											//调用addtip函数，添加提示信息
+			});
+			addHandler(inputs[i],"blur",function(event){
+				//监听input表单的失去焦点事件
+				var e =event || window.event;
+				var target = e.target || e.srcElement;
+				checkWarm(target);										//调用checkWarm函数，检查数据的准确性
+			});
+		}
+		for(var i=0;i<textareas.length;i++){
+			addHandler(textareas[i],"focus",function(event){
+				var e = event || window.event;
+				var target = e.target || e.srcElement;
+				addtip(target);											//调用addtip函数，添加提示信息
+			});
+			addHandler(textareas[i],"blur",function(event){
+				var e =event || window.event;
+				var target = e.target || e.srcElement;
+				checkWarm(target);										//调用checkWarm函数，检查数据的准确性
+			});
+		}
+	});
+	function checkedType(id){
+		//根据不同的表单类型对data的值进行赋值
+		switch(id){
+			case "typeLabel1":{
+				data.label = "input";
+				data.type = "text";
+				showOther(id);								//调用函数展示表单其他规则
+				break;
+			}
+			case "typeLabel2":{
+				data.label = "input";
+				data.type = "radio";
+				showOther(id);
+				break;
+			}
+			case "typeLabel3":{
+				data.label = "input";
+				data.type = "checkbox";
+				showOther(id);
+				break;
+			}
+			case "typeLabel4":{
+				data.label = "select";
+				data.type = "select";
+				showOther(id);
+				break;
+			}
+			case "typeLabel5":{
+				data.label = "textarea";
+				data.type = "textfield";
+				showOther(id);
+				break;
+			}
+		}
+	}
 	function showOther(id){
 		//该函数用于显示其他规则的内容
 		var rules = doc.getElementById("rules"),
@@ -109,7 +220,7 @@
 			case "typeLabel4":{							//若为单选、多选、下拉框标签则显示相应内容
 				rules.innerHTML = "<label>输入选项内容：<input name='inputRule' type='text' id='inputRule' placeholder='以逗号、空格、分号提交'></label><br><div id='tagQueue'></div>";
 				textlen.innerHTML = leninner;
-				item = addTag();
+				addTag();
 				break;
 			}
 		}
@@ -184,105 +295,150 @@
 			ele.innerHTML = inner;
 		}
 	}
-	function checkedType(id){
-		switch(id){
-			case "typeLabel1":{
-				data.label = "input";
-				data.type = "text";
-				showOther(id);
-				break;
+	function addForm(){
+		//添加表单
+		var form = doc.forms["frmAdd"],										//获取添加规则的表单
+		textName = form["textName"],										//获取表单的名称输入框
+		isRequire = form["isRequire"],
+		rules = form["rules"],
+		minlen = form["minlen"],											//获取规则的最小长度
+		maxlen = form["maxlen"],											//获取规则的最大长度
+		type = doc.forms["frmType"];
+		for (var i = isRequire.length - 1; i >= 0; i--) {
+			if(isRequire[i].checked == true && isRequire[i].value =="require"){
+				data.isRequire = true;
 			}
-			case "typeLabel2":{
-				data.label = "input";
-				data.type = "radio";
-				showOther(id);
-				break;
-			}
-			case "typeLabel3":{
-				data.label = "input";
-				data.type = "checkbox";
-				showOther(id);
-				break;
-			}
-			case "typeLabel4":{
-				data.label = "select";
-				data.type = "select";
-				showOther(id);
-				break;
-			}
-			case "typeLabel5":{
-				data.label = "textarea";
-				data.type = "textfield";
-				showOther(id);
-				break;
+			else{
+				data.isRequire = false;
 			}
 		}
-	}
-	var doc = document,
-	formInit = doc.getElementById("formInit"),
-	checkType = doc.getElementById("checkType"),
-	add = doc.getElementById("add");
-	addHandler(formInit,"click",function(event){
-		var e = event || window.event,
-		target = event.target || event.srcElement;
-		if(target.tagName.toLowerCase() == "button"){
-			event.preventDefault();
-			for (var i = dataQueue.length - 1; i >= 0; i--) {
-				if(dataQueue[i].success == false){
-					alert("有数据未填写或格式错误，提交失败！");
+		for (var i = type.length - 1; i >= 0; i--) {
+			if(type[i].checked){
+				if(textName.value==""){
+					alert("标签名称还没输入！");
 					return false;
 				}
-			};
-			alert("提交成功！");
-		}
-		else if(target.tagName.toLowerCase() == "select"){
-			var id = target.id-1;
-			dataQueue[id].success = true;
-		}
-	});
-	addHandler(checkType,"click",function(event){
-		var e = event || window.event,
-		target = event.target || event.srcElement;
-		if(target.tagName.toLowerCase() == "label" || target.parentNode.tagName.toLowerCase() == "label"){
-			checkedType(target.id || target.parentNode.id);
-		}
-	});
-	addHandler(add,"click",function(){
-		if(addForm()){
-			dataQueue.push(new Data(data));
-			doc.getElementById("formInit").innerHTML = "";
-			for (var i = 0; i < dataQueue.length; i++) {
-				dataQueue[i].init();
-			};
-			doc.getElementById("formInit").innerHTML += "<br><button id='btn'>提交</button>";
-		}
-		var inputs = myForm.getElementsByTagName("input"),
-		textareas = myForm.getElementsByTagName("textarea");
-		for(var i=0;i<inputs.length;i++){
-			addHandler(inputs[i],"focus",function(event){
-				var e = event || window.event;
-				var target = e.target || e.srcElement;
-				addtip(target);
-			});
-			addHandler(inputs[i],"blur",function(event){
-				var e =event || window.event;
-				var target = e.target || e.srcElement;
-				checkWarm(target);
-			});
-		}
-		for(var i=0;i<textareas.length;i++){
-			addHandler(textareas[i],"focus",function(event){
-				var e = event || window.event;
-				var target = e.target || e.srcElement;
-				addtip(target);
-			});
-			addHandler(textareas[i],"blur",function(event){
-				var e =event || window.event;
-				var target = e.target || e.srcElement;
-				checkWarm(target);
-			});
-		}
-	});
+				else{
+					data.label = textName.value;
+				}
+				var typeVal = type[i].value;
+				switch(typeVal){
+					case "text":{
+						data.type = "input";
+						data.inputType = "text";
+						if(rules!=undefined){
+							for (var i = rules.length - 1; i >= 0; i--) {
+								var rulesVal = rules[i];
+								if(rulesVal.checked){
+									switch(rulesVal.value){
+										case "txt":{
+											data.rulesType = "text";
+											break;
+										}
+										case "num":{
+											data.rulesType = "number";
+											break;
+										}
+										case "tel":{
+											data.rulesType = "telphone";
+											break;
+										}
+										case "mail":{
+											data.rulesType = "email";
+											break;
+										}
+										case "psw":{
+											data.rulesType = "password";
+											break;
+										}
+									}
+								}
+							};
+						}
+						if(parseInt(minlen.value) > parseInt(maxlen.value)){
+							alert("长度参数不正确");
+							return false;
+						}
+						else{
+							data.minlen = parseInt(minlen.value);
+							data.maxlen = parseInt(maxlen.value);
+						}
+						data.id++;
+						break;
+					}
+					case "radio":{
+						var tagQueueVal = doc.getElementById("tagQueue").childNodes;
+						data.type = "input";
+						data.item = [];
+						data.inputType = "radio";
+						data.rulesType = "radio";
+						if(tagQueueVal.length == 0){
+							alert("选项内容尚未添加！");
+							return false;
+						}
+						else{
+							for (var i = tagQueueVal.length - 1; i >= 0; i--) {
+								data.item.push(tagQueueVal[i].innerText);
+							};
+						}
+						data.id++;
+						break;
+					}
+					case "checkbox":{
+						var tagQueueVal = doc.getElementById("tagQueue").childNodes;
+						data.type = "input";
+						data.item = [];
+						data.inputType = "checkbox";
+						data.rulesType = "checkbox";
+						if(tagQueueVal.length == 0){
+							alert("选项内容尚未添加！");
+							return false;
+						}
+						else{
+							for (var i = tagQueueVal.length - 1; i >= 0; i--) {
+								data.item.push(tagQueueVal[i].innerText);
+							};
+						}
+						data.id++;
+						break;
+					}
+					case "select":{
+						var tagQueueVal = doc.getElementById("tagQueue").childNodes;
+						data.type = "select";
+						data.item = [];
+						data.inputType = "select";
+						data.rulesType = "select";
+						if(tagQueueVal.length == 0){
+							alert("选项内容尚未添加！");
+							return false;
+						}
+						else{
+							for (var i = tagQueueVal.length - 1; i >= 0; i--) {
+								data.item.push(tagQueueVal[i].innerText);
+							};
+						}
+						data.id++;
+						break;
+					}
+					case "textarea":{
+						data.type = "textarea";
+						data.inputType = "textarea";
+						if(parseInt(minlen.value) > parseInt(maxlen.value)){
+							alert("长度参数不正确");
+							return false;
+						}
+						else{
+							data.minlen = parseInt(minlen.value);
+							data.maxlen = parseInt(maxlen.value);
+						}
+						data.id++;
+						break;
+					}
+				}
+			}
+		};
+		return true;
+	}
 	function addtip(target){
 		var p = target.parentNode.getElementsByTagName("p");
 		var text = null,textMessage="",id=target.id-1,myData = dataQueue[id];
@@ -647,145 +803,5 @@
 		else{
 			return false;
 		}
-	}
-	function addForm(){
-		var form = doc.forms["frmAdd"],
-		textName = form["textName"],
-		isRequire = form["isRequire"],
-		rules = form["rules"],
-		minlen = form["minlen"],
-		maxlen = form["maxlen"],
-		type = doc.forms["frmType"];
-		for (var i = isRequire.length - 1; i >= 0; i--) {
-			if(isRequire[i].checked == true && isRequire[i].value =="require"){
-				data.isRequire = true;
-			}
-		}
-		for (var i = type.length - 1; i >= 0; i--) {
-			if(type[i].checked){
-				if(textName.value==""){
-					alert("标签名称还没输入！");
-					return false;
-				}
-				else{
-					data.label = textName.value;
-				}
-				var typeVal = type[i].value;
-				switch(typeVal){
-					case "text":{
-						data.type = "input";
-						data.inputType = "text";
-						if(rules!=undefined){
-							for (var i = rules.length - 1; i >= 0; i--) {
-								var rulesVal = rules[i];
-								if(rulesVal.checked){
-									switch(rulesVal.value){
-										case "txt":{
-											data.rulesType = "text";
-											break;
-										}
-										case "num":{
-											data.rulesType = "number";
-											break;
-										}
-										case "tel":{
-											data.rulesType = "telphone";
-											break;
-										}
-										case "mail":{
-											data.rulesType = "email";
-											break;
-										}
-										case "psw":{
-											data.rulesType = "password";
-											break;
-										}
-									}
-								}
-							};
-						}
-						if(parseInt(minlen.value) > parseInt(maxlen.value)){
-							alert("长度参数不正确");
-							return false;
-						}
-						else{
-							data.minlen = parseInt(minlen.value);
-							data.maxlen = parseInt(maxlen.value);
-						}
-						data.id++;
-						break;
-					}
-					case "radio":{
-						var tagQueueVal = doc.getElementById("tagQueue").childNodes;
-						data.type = "input";
-						data.item = [];
-						data.inputType = "radio";
-						data.rulesType = "radio";
-						if(tagQueueVal.length == 0){
-							alert("选项内容尚未添加！");
-							return false;
-						}
-						else{
-							for (var i = tagQueueVal.length - 1; i >= 0; i--) {
-								data.item.push(tagQueueVal[i].innerText);
-							};
-						}
-						data.id++;
-						break;
-					}
-					case "checkbox":{
-						var tagQueueVal = doc.getElementById("tagQueue").childNodes;
-						data.type = "input";
-						data.item = [];
-						data.inputType = "checkbox";
-						data.rulesType = "checkbox";
-						if(tagQueueVal.length == 0){
-							alert("选项内容尚未添加！");
-							return false;
-						}
-						else{
-							for (var i = tagQueueVal.length - 1; i >= 0; i--) {
-								data.item.push(tagQueueVal[i].innerText);
-							};
-						}
-						data.id++;
-						break;
-					}
-					case "select":{
-						var tagQueueVal = doc.getElementById("tagQueue").childNodes;
-						data.type = "select";
-						data.item = [];
-						data.inputType = "select";
-						data.rulesType = "select";
-						if(tagQueueVal.length == 0){
-							alert("选项内容尚未添加！");
-							return false;
-						}
-						else{
-							for (var i = tagQueueVal.length - 1; i >= 0; i--) {
-								data.item.push(tagQueueVal[i].innerText);
-							};
-						}
-						data.id++;
-						break;
-					}
-					case "textarea":{
-						data.type = "textarea";
-						data.inputType = "textarea";
-						if(parseInt(minlen.value) > parseInt(maxlen.value)){
-							alert("长度参数不正确");
-							return false;
-						}
-						else{
-							data.minlen = parseInt(minlen.value);
-							data.maxlen = parseInt(maxlen.value);
-						}
-						data.id++;
-						break;
-					}
-				}
-			}
-		};
-		return true;
 	}
 }());
