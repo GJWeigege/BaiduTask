@@ -175,3 +175,15 @@ button{
 #tagQueue p:hover{
 	background-color: rgb(255,0,0);
 }
+#formInit input.error{
+	border: solid 1px red;
+}
+#formInit p.error{
+	color: red;
+}
+#formInit input.right{
+	border: solid 1px rgb(94,183,64);
+}
+#formInit p.right{
+	color: rgb(94,183,64);
+}

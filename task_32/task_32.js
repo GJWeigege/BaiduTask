@@ -9,6 +9,7 @@
 		this.maxlen = data.maxlen;
 		this.item = [];
 		this.id = data.id;
+		this.success = data.success;
 		if(data.item.length != 0){
 			for (var i = data.item.length - 1; i >= 0; i--) {
 				this.item[i] = data.item[i]
@@ -26,7 +27,7 @@
 				case "radio":{
 					inner += "<label><span>"+this.label+"：</span>";
 					for (var i = data.item.length - 1; i >= 0; i--) {
-						inner += "<label><input type='"+this.inputType+"' name='"+this.id+"' id='"+this.id+"'>"+data.item[i]+"</label>";
+						inner += "<label><input type='"+this.inputType+"' value='"+data.item[i]+"' name='"+this.label+"' id='"+this.id+"'>"+data.item[i]+"</label>";
 					};
 					inner += "</label>";
 					break;
@@ -34,7 +35,7 @@
 				case "checkbox":{
 					inner += "<label><span>"+this.label+"：</span>";
 					for (var i = data.item.length - 1; i >= 0; i--) {
-						inner += "<label><input type='"+this.inputType+"' name='"+this.id+"' id='"+this.id+"'>"+data.item[i]+"</label>";
+						inner += "<label><input type='"+this.inputType+"' value='"+data.item[i]+"' name='"+this.label+"' id='"+this.id+"'>"+data.item[i]+"</label>";
 					};
 					inner += "</label>";
 					break;
@@ -42,7 +43,7 @@
 				case "select":{
 					inner += "<label><span>"+this.label+"：</span><select id='"+this.id+"'>";
 					for (var i = data.item.length - 1; i >= 0; i--) {
-						inner += "<option>"+data.item[i]+"</option>";
+						inner += "<option value='"+data.item[i]+"'>"+data.item[i]+"</option>";
 					};
 					inner += "</select></label>";
 					break;
@@ -52,22 +53,8 @@
 					break;
 				}
 			}
-			console.log(inner);
 			doc.forms["formInit"].innerHTML = inner;
-		},
-		// validator: function(){
-		// 	var id= this.id,elem = doc.getElementById("0");
-		// 	console.log(elem);
-		// 	addHandler(elem,"click",function(){
-		// 		console.log(elem);
-		// 	});
-		// },
-		// isempty: function(type,id){
-		// 	var val = doc.getElementById(id).value;
-		// 	// switch
-		// },
-		// iserror: function(id){},
-		// isRequire: function(id){}
+		}
 	};
 	var data = {
         label: '',              //标签名字
@@ -79,6 +66,7 @@
         maxlen: 1,          	//text之类文本的最大长度限制
         item: [],               //radio的选项
         id: 0,                  //表单的id，初始值为0
+        success: false
     },dataQueue=[];
 	// data.prototype = {
 	// 	validator: function(){
@@ -105,7 +93,7 @@
 		switch(id){										//根据获取的事件id进行判断
 			case "typeLabel1":{							//若为普通文本标签则显示相应内容
 				textinner += "数据类型：<label><input type='radio' name='rules' value='txt' checked>文本</label><label><input type='radio' name='rules' value='num'>数字</label><label><input type='radio' name='rules' value='tel'>手机</label><label><input type='radio' name='rules' value='mail'>邮箱</label><label><input type='radio' name='rules' value='psw'>密码</label>";
-				leninner += "字符长度：<input id='minlen' type='number' name='minlen'> — <input id='maxlen' name='maxlen' type='number'>";
+				leninner += "字符长度：<input id='minlen' type='number' name='minlen' value='4' min='0'> — <input id='maxlen' name='maxlen' type='number' value='16' min='1'>";
 				rules.innerHTML = textinner;
 				textlen.innerHTML = leninner;
 				break;
@@ -173,7 +161,7 @@
 			var e = window.event || event;
 			var target = e.target || e.srcElement;
 			if(target.tagName.toLowerCase()=="p"){
-				var index = Array.prototype.indexOf.call(document.getElementsByTagName("p"),target);//获取点击的索引值
+				var index = Array.prototype.indexOf.call(div.getElementsByTagName("p"),target);//获取点击的索引值
 				tagData.splice(index,1);					//删除点击的标签
 				render(tagData,div);						//重新渲染标签队列
 			}
@@ -183,8 +171,7 @@
 			var e = window.event || event;
 			var target = e.target || e.srcElement;
 			if(target.tagName.toLowerCase()=="p"){
-				console.log(target);
-				var index = Array.prototype.indexOf.call(document.getElementsByTagName("p"),target);//获取点击的索引值
+				var index = Array.prototype.indexOf.call(div.getElementsByTagName("p"),target);//获取点击的索引值
 				target.innerHTML = tagData[index];			//删除“点击删除”内容
 			}
 		});
@@ -232,15 +219,26 @@
 		}
 	}
 	var doc = document,
-	myForm = doc.getElementById("myForm"),
+	formInit = doc.getElementById("formInit"),
 	checkType = doc.getElementById("checkType"),
-	addOther = doc.getElementById("addOther"),
 	add = doc.getElementById("add");
-	addHandler(myForm,"click",function(event){
-		// var e = event || window.event,
-		// target = event.target || event.srcElement;
-
-		// addHandler()
+	addHandler(formInit,"click",function(event){
+		var e = event || window.event,
+		target = event.target || event.srcElement;
+		if(target.tagName.toLowerCase() == "button"){
+			event.preventDefault();
+			for (var i = dataQueue.length - 1; i >= 0; i--) {
+				if(dataQueue[i].success == false){
+					alert("有数据未填写或格式错误，提交失败！");
+					return false;
+				}
+			};
+			alert("提交成功！");
+		}
+		else if(target.tagName.toLowerCase() == "select"){
+			var id = target.id-1;
+			dataQueue[id].success = true;
+		}
 	});
 	addHandler(checkType,"click",function(event){
 		var e = event || window.event,
@@ -249,14 +247,7 @@
 			checkedType(target.id || target.parentNode.id);
 		}
 	});
-	addHandler(addOther,"click",function(event){
-		var e = event || window.event,
-		target = event.target || event.srcElement;
-	});
 	addHandler(add,"click",function(){
-		// var e = event || window.event,
-		// target = event.target || event.srcElement;
-		// dataQueue.push(data);
 		if(addForm()){
 			dataQueue.push(new Data(data));
 			doc.getElementById("formInit").innerHTML = "";
@@ -268,7 +259,6 @@
 		var inputs = myForm.getElementsByTagName("input"),
 		textareas = myForm.getElementsByTagName("textarea");
 		for(var i=0;i<inputs.length;i++){
-			console.log(inputs[i]);
 			addHandler(inputs[i],"focus",function(event){
 				var e = event || window.event;
 				var target = e.target || e.srcElement;
@@ -292,39 +282,37 @@
 				checkWarm(target);
 			});
 		}
-		console.log(dataQueue);
 	});
 	function addtip(target){
 		var p = target.parentNode.getElementsByTagName("p");
-		var text = null,textMessage="",id=target.id,data = dataQueue[id];
-		console.log(data);
+		var text = null,textMessage="",id=target.id-1,myData = dataQueue[id];
 		if(p[0]!==undefined){
 			p[0].parentNode.removeChild(p[0]);
 		}
 		var pTip = document.createElement("p");
-		switch(data.type){
+		switch(myData.type){
 			case "input":{
-				switch(data.rulesType){
+				switch(myData.rulesType){
 					case "text":{
-						if(data.isRequire){
-							textMessage = "必填，长度为"+data.minlen+"~"+data.maxlen+"个字符";
+						if(myData.isRequire){
+							textMessage = "必填，长度为"+myData.minlen+"~"+myData.maxlen+"个字符";
 						}
 						else{
-							textMessage = "选填，长度为"+data.minlen+"~"+data.maxlen+"个字符";
+							textMessage = "选填，长度为"+myData.minlen+"~"+myData.maxlen+"个字符";
 						}
 						break;
 					}
 					case "password":{
-						if(data.isRequire){
-							textMessage = "必填，长度为"+data.minlen+"~"+data.maxlen+"个字符";
+						if(myData.isRequire){
+							textMessage = "必填，长度为"+myData.minlen+"~"+myData.maxlen+"个字符";
 						}
 						else{
-							textMessage = "选填，长度为"+data.minlen+"~"+data.maxlen+"个字符";
+							textMessage = "选填，长度为"+myData.minlen+"~"+myData.maxlen+"个字符";
 						}
 						break;
 					}
 					case "email":{
-						if(data.isRequire){
+						if(myData.isRequire){
 							textMessage = "必填，必须为常见邮箱格式";
 						}
 						else{
@@ -333,7 +321,7 @@
 						break;
 					}
 					case "telphone":{
-						if(data.isRequire){
+						if(myData.isRequire){
 							textMessage = "必填，为11位数字";
 						}
 						else{
@@ -342,11 +330,11 @@
 						break;
 					}
 					case "number":{
-						if(data.isRequire){
-							textMessage = "必填，长度为"+data.minlen+"~"+data.maxlen+"个数字";
+						if(myData.isRequire){
+							textMessage = "必填，长度为"+myData.minlen+"~"+myData.maxlen+"个数字";
 						}
 						else{
-							textMessage = "选填，长度为"+data.minlen+"~"+data.maxlen+"个数字";
+							textMessage = "选填，长度为"+myData.minlen+"~"+myData.maxlen+"个数字";
 						}
 						break;
 					}
@@ -354,11 +342,11 @@
 				break;
 			}
 			case "textarea":{
-				if(data.isRequire){
-					textMessage = "必填，长度为"+data.minlen+"~"+data.maxlen+"个数字";
+				if(myData.isRequire){
+					textMessage = "必填，长度为"+myData.minlen+"~"+myData.maxlen+"个字符";
 				}
 				else{
-					textMessage = "选填，长度为"+data.minlen+"~"+data.maxlen+"个数字";
+					textMessage = "选填，长度为"+myData.minlen+"~"+myData.maxlen+"个字符";
 				}
 				break;
 			}
@@ -369,108 +357,296 @@
 		target.parentNode.appendChild(pTip);
 	}
 	function checkWarm(target){
-		var p = target.parentNode.parentNode.getElementsByTagName("p");
-		// console.log(span[0]!==undefined);
-		var text = null;
+		var p = target.parentNode.getElementsByTagName("p");
+		var text = null,textMessage="",id=target.id-1,myData = dataQueue[id];
 		if(p[0]!==undefined){
 			p[0].parentNode.removeChild(p[0]);
 		}
-		span = document.createElement("span");
-		switch(target.id){
-			case "text-name":{
-				if(target.value==""){
-					text = document.createTextNode("姓名不能为空");
-					target.className = "error";
-					span.className = "error";
-				}
-				else if(checkName(target.value)) {
-					text = document.createTextNode("名字格式正确");
-					target.className = "right";
-					span.className = "right";
-				}
-				else{
-					text = document.createTextNode("名字格式不正确");
-					target.className = "error";
-					span.className = "error";
+		var pMessage = document.createElement("p"),reg = new RegExp("^[0-9a-zA-Z]{"+myData.minlen+","+myData.maxlen+"}$");
+		switch(myData.type){
+			case "input":{
+				switch(myData.rulesType){
+					case "text":{
+						if(myData.isRequire){
+							if(target.value==""){
+								textMessage = "文本不能为空";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+							else if(checkValue(target.value,myData.minlen,myData.maxlen)) {
+								textMessage = "文本格式正确";
+								target.className = "right";
+								pMessage.className = "right";
+								dataQueue[id].success = true;
+							}
+							else{
+								textMessage = "文本格式不正确";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+						}
+						else{
+							if(target.value==""){
+								dataQueue[id].success = true;
+							}
+							else if(checkValue(target.value,myData.minlen,myData.maxlen)) {
+								textMessage = "文本格式正确";
+								target.className = "right";
+								pMessage.className = "right";
+								dataQueue[id].success = true;
+							}
+							else{
+								textMessage = "文本格式不正确";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+						}
+						break;
+					}
+					case "password":{
+						if(myData.isRequire){
+							if(target.value==""){
+								textMessage = "密码不能为空";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+							else if(reg.test(target.value)) {
+								textMessage = "密码格式正确";
+								target.className = "right";
+								pMessage.className = "right";
+								dataQueue[id].success = true;
+							}
+							else{
+								textMessage = "密码格式不正确";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+						}
+						else{
+							if(target.value==""){
+								dataQueue[id].success = true;
+							}
+							else if(reg.test(target.value)) {
+								textMessage = "密码格式正确";
+								target.className = "right";
+								pMessage.className = "right";
+								dataQueue[id].success = true;
+							}
+							else{
+								textMessage = "密码格式不正确";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+						}
+						break;
+					}
+					case "email":{
+						if(myData.isRequire){
+							if(target.value==""){
+								textMessage = "邮箱不能为空";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+							else if(/^[\w\.\-]+@([a-zA-Z0-9\-]+\.)+[a-zA-Z0-9\-]{2,4}$/.test(target.value)) {
+								textMessage = "邮箱格式正确";
+								target.className = "right";
+								pMessage.className = "right";
+								dataQueue[id].success = true;
+							}
+							else{
+								textMessage = "邮箱格式不正确";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+						}
+						else{
+							if(target.value==""){
+								dataQueue[id].success = true;
+							}
+							else if(/^[\w\.\-]+@([a-zA-Z0-9\-]+\.)+[a-zA-Z0-9\-]{2,4}$/.test(target.value)) {
+								textMessage = "邮箱格式正确";
+								target.className = "right";
+								pMessage.className = "right";
+								dataQueue[id].success = true;
+							}
+							else{
+								textMessage = "邮箱格式不正确";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+						}
+						break;
+					}
+					case "telphone":{
+						if(myData.isRequire){
+							if(target.value==""){
+								textMessage = "手机号码不能为空";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+							else if(/^[0-9]{11}$/.test(target.value)) {
+								textMessage = "手机号码格式正确";
+								target.className = "right";
+								pMessage.className = "right";
+								dataQueue[id].success = true;
+							}
+							else{
+								textMessage = "手机号码格式不正确";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+						}
+						else{
+							if(target.value==""){
+								dataQueue[id].success = true;
+							}
+							else if(/^[0-9]{11}$/.test(target.value)) {
+								textMessage = "手机号码格式正确";
+								target.className = "right";
+								pMessage.className = "right";
+								dataQueue[id].success = true;
+							}
+							else{
+								textMessage = "手机号码格式不正确";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+						}
+						break;
+					}
+					case "number":{
+						if(myData.isRequire){
+							if(target.value==""){
+								textMessage = "数字内容不能为空";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+							else if(checkValue(target.value,myData.minlen,myData.maxlen)) {
+								textMessage = "数字内容格式正确";
+								target.className = "right";
+								pMessage.className = "right";
+								dataQueue[id].success = true;
+							}
+							else{
+								textMessage = "数字内容格式不正确";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+						}
+						else{
+							if(target.value==""){
+								dataQueue[id].success = true;
+							}
+							else if(checkValue(target.value,myData.minlen,myData.maxlen)) {
+								textMessage = "数字内容格式正确";
+								target.className = "right";
+								pMessage.className = "right";
+								dataQueue[id].success = true;
+							}
+							else{
+								textMessage = "数字内容格式不正确";
+								target.className = "error";
+								pMessage.className = "error";
+								dataQueue[id].success = false;
+							}
+						}
+						break;
+					}
+					case "radio":{
+						dataQueue[id].success = true;
+						break;
+					}
+					case "checkbox":{
+						var checkName = target.name,
+						form = doc.forms["formInit"],
+						checkBox = form.elements[checkName];
+						if(Array.prototype.some.call(checkBox,function(item,index,array){
+							return item.checked;
+						})){
+							dataQueue[id].success = true;
+						}
+						else{
+							dataQueue[id].success = false;
+						}
+						break;
+					}
 				}
 				break;
 			}
-			case "password":{
-				if(target.value==""){
-					text = document.createTextNode("密码不能为空");
-					target.className = "error";
-					span.className = "error";
-				}
-				else if(/^[0-9a-zA-Z]{4,16}$/.test(target.value)) {
-					text = document.createTextNode("密码可用");
-					target.className = "right";
-					span.className = "right";
-				}
-				else{
-					text = document.createTextNode("密码格式不正确");
-					target.className = "error";
-					span.className = "error";
-				}
-				break;
-			}
-			case "passwordCheck":{
-				var psw = document.getElementById("password").value;
-				if(target.value==""){
-					text = document.createTextNode("验证密码不能为空");
-					target.className = "error";
-					span.className = "error";
-				}
-				else if(target.value===psw) {
-					text = document.createTextNode("密码输入一致");
-					target.className = "right";
-					span.className = "right";
+			case "textarea":{
+				if(myData.isRequire){
+					if(target.value==""){
+						textMessage = "文本不能为空";
+						target.className = "error";
+						pMessage.className = "error";
+						dataQueue[id].success = false;
+					}
+					else if(checkValue(target.value,myData.minlen,myData.maxlen)) {
+						textMessage = "文本格式正确";
+						target.className = "right";
+						pMessage.className = "right";
+						dataQueue[id].success = true;
+					}
+					else{
+						textMessage = "文本格式不正确";
+						target.className = "error";
+						pMessage.className = "error";
+						dataQueue[id].success = false;
+					}
 				}
 				else{
-					text = document.createTextNode("密码输入不一致");
-					target.className = "error";
-					span.className = "error";
-				}
-				break;
-			}
-			case "text-mail":{
-				if(target.value==""){
-					text = document.createTextNode("邮箱不能为空");
-					target.className = "error";
-					span.className = "error";
-				}
-				else if(/^[\w\.\-]+@([a-zA-Z0-9\-]+\.)+[a-zA-Z0-9\-]{2,4}$/.test(target.value)) {
-					text = document.createTextNode("邮箱格式正确");
-					target.className = "right";
-					span.className = "right";
-				}
-				else{
-					text = document.createTextNode("邮箱格式不正确");
-					target.className = "error";
-					span.className = "error";
-				}
-				break;
-			}
-			case "text-tel":{
-				if(target.value==""){
-					text = document.createTextNode("手机不能为空");
-					target.className = "error";
-					span.className = "error";
-				}
-				else if(/^[0-9]{11}$/.test(target.value)) {
-					text = document.createTextNode("手机格式正确");
-					target.className = "right";
-					span.className = "right";
-				}
-				else{
-					text = document.createTextNode("手机格式不正确");
-					target.className = "error";
-					span.className = "error";
+					if(target.value==""){
+						dataQueue[id].success = true;
+					}
+					else if(checkValue(target.value,myData.minlen,myData.maxlen)) {
+						textMessage = "文本格式正确";
+						target.className = "right";
+						pMessage.className = "right";
+						dataQueue[id].success = true;
+					}
+					else{
+						textMessage = "文本格式不正确";
+						target.className = "error";
+						pMessage.className = "error";
+						dataQueue[id].success = false;
+					}
 				}
 				break;
 			}
 		}
-		// span.appendChild(text);
-		// target.parentNode.parentNode.appendChild(span);
+		text = document.createTextNode(textMessage);
+		pMessage.appendChild(text);
+		target.parentNode.appendChild(pMessage);
+	}
+	function checkValue(value,min,max){
+		var len = 0;
+		for(var i=0;i<value.length;i++){
+			if(value.charCodeAt(i)>127 || value.charCodeAt(i)==94) {  
+	       		len += 2;  
+	     	}else{
+	       		len++;  
+	     	}
+		}
+		if(len<=max && len>=min){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	function addForm(){
 		var form = doc.forms["frmAdd"],
@@ -502,7 +678,6 @@
 						if(rules!=undefined){
 							for (var i = rules.length - 1; i >= 0; i--) {
 								var rulesVal = rules[i];
-								console.log();
 								if(rulesVal.checked){
 									switch(rulesVal.value){
 										case "txt":{
@@ -537,7 +712,7 @@
 							data.minlen = parseInt(minlen.value);
 							data.maxlen = parseInt(maxlen.value);
 						}
-						data.id=data.id++;
+						data.id++;
 						break;
 					}
 					case "radio":{
@@ -545,7 +720,7 @@
 						data.type = "input";
 						data.item = [];
 						data.inputType = "radio";
-						// if()
+						data.rulesType = "radio";
 						if(tagQueueVal.length == 0){
 							alert("选项内容尚未添加！");
 							return false;
@@ -555,7 +730,7 @@
 								data.item.push(tagQueueVal[i].innerText);
 							};
 						}
-						data.id=data.id++;
+						data.id++;
 						break;
 					}
 					case "checkbox":{
@@ -563,6 +738,7 @@
 						data.type = "input";
 						data.item = [];
 						data.inputType = "checkbox";
+						data.rulesType = "checkbox";
 						if(tagQueueVal.length == 0){
 							alert("选项内容尚未添加！");
 							return false;
@@ -572,7 +748,7 @@
 								data.item.push(tagQueueVal[i].innerText);
 							};
 						}
-						data.id=data.id++;
+						data.id++;
 						break;
 					}
 					case "select":{
@@ -580,17 +756,17 @@
 						data.type = "select";
 						data.item = [];
 						data.inputType = "select";
+						data.rulesType = "select";
 						if(tagQueueVal.length == 0){
 							alert("选项内容尚未添加！");
 							return false;
 						}
 						else{
 							for (var i = tagQueueVal.length - 1; i >= 0; i--) {
-								// .log(tagQueueVal[i].innerText);
 								data.item.push(tagQueueVal[i].innerText);
 							};
 						}
-						data.id=data.id++;
+						data.id++;
 						break;
 					}
 					case "textarea":{
@@ -604,13 +780,12 @@
 							data.minlen = parseInt(minlen.value);
 							data.maxlen = parseInt(maxlen.value);
 						}
-						data.id=data.id++;
+						data.id++;
 						break;
 					}
 				}
 			}
 		};
 		return true;
-		console.log(data);
 	}
 }());
