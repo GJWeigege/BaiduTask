@@ -111,6 +111,7 @@
 		else if(target.tagName.toLowerCase() == "select"){				//判断点击目标是否为下拉框
 			var id = target.id-1;										//获取点击目标的id对应数组的下标
 			dataQueue[id].success = true;								//若点击了下拉框则默认已经选择了数据，将success设置为true
+			addtip(target);												//添加提示标签
 		}
 	});
 	addHandler(checkType,"click",function(event){
@@ -160,6 +161,7 @@
 				checkWarm(target);										//调用checkWarm函数，检查数据的准确性
 			});
 		}
+		console.log(dataQueue);
 	});
 	function checkedType(id){
 		//根据不同的表单类型对data的值进行赋值
@@ -304,81 +306,75 @@
 		minlen = form["minlen"],											//获取规则的最小长度
 		maxlen = form["maxlen"],											//获取规则的最大长度
 		type = doc.forms["frmType"];
-		for (var i = isRequire.length - 1; i >= 0; i--) {
-			if(isRequire[i].checked == true && isRequire[i].value =="require"){
-				data.isRequire = true;
-			}
-			else{
-				data.isRequire = false;
-			}
-		}
+		
 		for (var i = type.length - 1; i >= 0; i--) {
-			if(type[i].checked){
-				if(textName.value==""){
+			if(type[i].checked){											//若选中表单类型，则执行以下程序
+				if(textName.value==""){//判断标签名是否为空，若不为空则赋值给label
 					alert("标签名称还没输入！");
 					return false;
 				}
 				else{
 					data.label = textName.value;
 				}
-				var typeVal = type[i].value;
+				var typeVal = type[i].value;			//获取表单类型
 				switch(typeVal){
-					case "text":{
-						data.type = "input";
-						data.inputType = "text";
+					case "text":{						//若为text则对相应变量赋值
+						data.type = "input";			//表单的标签名为input
+						data.inputType = "text";		//input的类型为text
 						if(rules!=undefined){
 							for (var i = rules.length - 1; i >= 0; i--) {
-								var rulesVal = rules[i];
+								var rulesVal = rules[i];					//获取input的具体类型规则
 								if(rulesVal.checked){
 									switch(rulesVal.value){
 										case "txt":{
-											data.rulesType = "text";
+											data.rulesType = "text";		//若为文本，赋值为text
 											break;
 										}
 										case "num":{
-											data.rulesType = "number";
+											data.rulesType = "number";		//若为数字，赋值为number
 											break;
 										}
 										case "tel":{
-											data.rulesType = "telphone";
+											data.rulesType = "telephone";	//若为手机，赋值为telephone
 											break;
 										}
 										case "mail":{
-											data.rulesType = "email";
+											data.rulesType = "email";		//若为邮箱，赋值为email
 											break;
 										}
 										case "psw":{
-											data.rulesType = "password";
+											data.rulesType = "password";	//若为密码，赋值为password
 											break;
 										}
 									}
 								}
 							};
 						}
-						if(parseInt(minlen.value) > parseInt(maxlen.value)){
+						if(parseInt(minlen.value) > parseInt(maxlen.value)){		//判断长度参数是否输入有误
 							alert("长度参数不正确");
 							return false;
 						}
 						else{
+							//输入正确则进行赋值
 							data.minlen = parseInt(minlen.value);
 							data.maxlen = parseInt(maxlen.value);
 						}
-						data.id++;
+						data.id++;								//对象的id自增
 						break;
 					}
 					case "radio":{
-						var tagQueueVal = doc.getElementById("tagQueue").childNodes;
+						var tagQueueVal = doc.getElementById("tagQueue").childNodes;//获取选项的值
 						data.type = "input";
 						data.item = [];
 						data.inputType = "radio";
 						data.rulesType = "radio";
-						if(tagQueueVal.length == 0){
+						if(tagQueueVal.length == 0){			//若tagQueueVal为空，则弹出窗口
 							alert("选项内容尚未添加！");
 							return false;
 						}
 						else{
 							for (var i = tagQueueVal.length - 1; i >= 0; i--) {
-								data.item.push(tagQueueVal[i].innerText);
+								data.item.push(tagQueueVal[i].innerText);//将标签值储存在item数组中
 							};
 						}
 						data.id++;
@@ -436,10 +432,21 @@
 					}
 				}
 			}
-		};
+		}
+		for (var i = isRequire.length - 1; i >= 0; i--) {							//判断选中的是“必填”或者“选填”
+			if(isRequire[i].checked == true && isRequire[i].value =="noreguire"){	
+				//选中选填则将isRequire赋值为false
+				data.isRequire = false;
+				if(data.inputType == "radio" || data.inputType == "checkbox" || data.inputType == "select"){
+					//若为选填且input的类型为单选、复选、下拉，则直接将success设置为true
+					data.success = true;
+				}
+			}
+		}
 		return true;
 	}
 	function addtip(target){
+		//输入框获得焦点时添加提示标签
 		var p = target.parentNode.getElementsByTagName("p");
 		var text = null,textMessage="",id=target.id-1,myData = dataQueue[id];
 		if(p[0]!==undefined){
@@ -447,6 +454,10 @@
 		}
 		var pTip = document.createElement("p");
 		switch(myData.type){
+			/* 根据不同类型提示不同信息
+			text提示长度，密码提示长度，邮箱提示正常邮箱格式，手机号提示11位长度数字，数字提示长度
+			文本域提示字符长度
+			下拉框提示选必填*/ 
 			case "input":{
 				switch(myData.rulesType){
 					case "text":{
@@ -476,7 +487,7 @@
 						}
 						break;
 					}
-					case "telphone":{
+					case "telephone":{
 						if(myData.isRequire){
 							textMessage = "必填，为11位数字";
 						}
@@ -506,13 +517,27 @@
 				}
 				break;
 			}
+			case "select":{
+				if(myData.isRequire){
+					textMessage = "必填";
+				}
+				else{
+					textMessage = "选填";
+				}
+				break;
+			}
 		}
-			
+		//将子元素添加到表单中
 		text = document.createTextNode(textMessage);
 		pTip.appendChild(text);
 		target.parentNode.appendChild(pTip);
 	}
 	function checkWarm(target){
+		/*当表单是去焦点时，
+		判断表单的数据是否符合规则：
+		若为必填，则判断是否为空，并且添加相应样式类型
+		文本若符合长度则显示正确样式，并且为success赋值为true，类似的，其他类型同样道理
+		*/
 		var p = target.parentNode.getElementsByTagName("p");
 		var text = null,textMessage="",id=target.id-1,myData = dataQueue[id];
 		if(p[0]!==undefined){
@@ -545,6 +570,8 @@
 						}
 						else{
 							if(target.value==""){
+								target.className = "";
+								pMessage.className = "";
 								dataQueue[id].success = true;
 							}
 							else if(checkValue(target.value,myData.minlen,myData.maxlen)) {
@@ -585,6 +612,8 @@
 						}
 						else{
 							if(target.value==""){
+								target.className = "";
+								pMessage.className = "";
 								dataQueue[id].success = true;
 							}
 							else if(reg.test(target.value)) {
@@ -625,6 +654,8 @@
 						}
 						else{
 							if(target.value==""){
+								target.className = "";
+								pMessage.className = "";
 								dataQueue[id].success = true;
 							}
 							else if(/^[\w\.\-]+@([a-zA-Z0-9\-]+\.)+[a-zA-Z0-9\-]{2,4}$/.test(target.value)) {
@@ -642,7 +673,7 @@
 						}
 						break;
 					}
-					case "telphone":{
+					case "telephone":{
 						if(myData.isRequire){
 							if(target.value==""){
 								textMessage = "手机号码不能为空";
@@ -665,6 +696,8 @@
 						}
 						else{
 							if(target.value==""){
+								target.className = "";
+								pMessage.className = "";
 								dataQueue[id].success = true;
 							}
 							else if(/^[0-9]{11}$/.test(target.value)) {
@@ -705,6 +738,8 @@
 						}
 						else{
 							if(target.value==""){
+								target.className = "";
+								pMessage.className = "";
 								dataQueue[id].success = true;
 							}
 							else if(checkValue(target.value,myData.minlen,myData.maxlen)) {
@@ -722,8 +757,10 @@
 						}
 						break;
 					}
-					case "radio":{
-						dataQueue[id].success = true;
+					case "radio":{										//单选框只要是去焦点便是已作出选择
+						if(myData.isRequire){
+							dataQueue[id].success = true;
+						}
 						break;
 					}
 					case "checkbox":{
@@ -766,6 +803,8 @@
 				}
 				else{
 					if(target.value==""){
+						target.className = "";
+						pMessage.className = "";
 						dataQueue[id].success = true;
 					}
 					else if(checkValue(target.value,myData.minlen,myData.maxlen)) {
@@ -784,11 +823,14 @@
 				break;
 			}
 		}
+		//为表单添加正确或错误信息
 		text = document.createTextNode(textMessage);
 		pMessage.appendChild(text);
 		target.parentNode.appendChild(pMessage);
 	}
 	function checkValue(value,min,max){
+		/*判断数值是否符合长度
+		*/
 		var len = 0;
 		for(var i=0;i<value.length;i++){
 			if(value.charCodeAt(i)>127 || value.charCodeAt(i)==94) {  
